@@ -42,47 +42,44 @@ public class NoteEditActivity extends CryptoNoteActivity {
         toolbar = findViewById(R.id.toolbar_note_edit);
         toolbar.inflateMenu(R.menu.edit_menu);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_36dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                save();
+        toolbar.setNavigationOnClickListener(view -> {
+            save();
+            finish();
+        });
+
+        repository.getNote(id).observe(this, note -> {
+            if(note != null){
+                NoteEditActivity.this.note = note;
+                titleField.setText(note.getTitle());
+                contentField.setText(note.getContents());
+            }
+        });
+
+        toolbar.setOnMenuItemClickListener(item -> {
+            if(item.getItemId() == R.id.remove) {
+                repository.deleteNote(note);
                 finish();
+                return true;
             }
-        });
-
-        repository.getNote(id).observe(this, new Observer<Note>() {
-            @Override
-            public void onChanged(@Nullable Note note) {
-                if(note != null){
-                    NoteEditActivity.this.note = note;
-                    titleField.setText(note.getTitle());
-                    contentField.setText(note.getContents());
-                }
-            }
-        });
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if(item.getItemId() == R.id.remove) {
-                    repository.deleteNote(note);
-                    finish();
-                    return true;
-                }
-                return false;
-            }
+            return false;
         });
     }
 
     public void save(){
-        note.setTitle(titleField.getText().toString());
-        note.setContents(contentField.getText().toString());
-        repository.saveNote(note);
+        final String title = titleField.getText().toString();
+        final String contents = contentField.getText().toString();
+
+        new Thread(() -> {
+            note.setTitle(title);
+            note.setContents(contents);
+            repository.saveNote(note);
+        }).start();
     }
 
     @Override
     public void onBackPressed() {
         save();
+
         super.onBackPressed();
     }
 }

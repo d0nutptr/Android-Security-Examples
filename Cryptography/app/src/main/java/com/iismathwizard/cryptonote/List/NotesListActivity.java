@@ -54,29 +54,18 @@ public class NotesListActivity extends CryptoNoteActivity {
 
         adapter = new NotesListAdapter();
         notesList.setAdapter(adapter);
-        notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(NotesListActivity.this, NoteEditActivity.class);
-                intent.putExtra(NoteEditActivity.EXTRA_ID, adapter.getItem(i).getId());
-                startActivity(intent);
-            }
+        notesList.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent intent = new Intent(NotesListActivity.this, NoteEditActivity.class);
+            intent.putExtra(NoteEditActivity.EXTRA_ID, adapter.getItem(i).getId());
+            startActivity(intent);
         });
 
-        repository.getNotes().observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(@Nullable List<Note> notes) {
-                adapter.notes = notes;
-                adapter.notifyDataSetChanged();
-            }
+        repository.getNotes().observe(this, notes -> {
+            adapter.notes = notes;
+            adapter.notifyDataSetChanged();
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                repository.createNote();
-            }
-        });
+        fab.setOnClickListener(view -> new Thread(() -> repository.createNote()).start());
     }
 
     private class NotesListAdapter extends BaseAdapter {

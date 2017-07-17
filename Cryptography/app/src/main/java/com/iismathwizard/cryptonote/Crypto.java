@@ -116,11 +116,10 @@ public class Crypto {
             System.arraycopy(iv, 0, cipherTextPayload, 0, iv.length);
             System.arraycopy(cipherText, 0, cipherTextPayload, iv.length, cipherText.length);
 
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (GeneralSecurityException | IOException e) {
+            return null;
         }
+
         return Base64.encodeToString(cipherTextPayload, Base64.DEFAULT);
     }
 
@@ -140,11 +139,10 @@ public class Crypto {
             Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             cipher.init(Cipher.DECRYPT_MODE, encryptionKey, new GCMParameterSpec(128, iv));
             plaintext = cipher.doFinal(cipherText);
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (GeneralSecurityException | IOException e) {
+            return null;
         }
+
         return new String(plaintext);
     }
 }

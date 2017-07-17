@@ -49,6 +49,8 @@ While a castle provides strong defense on the outside, it is not impervious. If 
 
 Defense in Depth suggests that we have many walls and protections that all work together. If one falls then another can take its place. For example, while a username and password combination is one layer of defense to protecting a user's account, two factor authentication is a second layer of defense that protects the user if the first layer falls. 
 
+This should be enough of an introduction to some core security concepts for the rest to make sense. Each of the following sections will have an application associated with it that demonstrates some of the information listed in it. While the applications will generally contain multiple types of security protections (ie. input validation + cryptography), they individually will attempt to demonstrate a correct implementation (given the application) of each type of security measure. 
+
 ## Authentication
 
 ## User Profiles
