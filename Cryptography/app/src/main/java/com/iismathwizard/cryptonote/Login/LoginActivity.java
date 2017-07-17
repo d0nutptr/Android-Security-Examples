@@ -9,7 +9,7 @@ import com.iismathwizard.cryptonote.Crypto;
 import com.iismathwizard.cryptonote.CryptoNoteActivity;
 import com.iismathwizard.cryptonote.List.NotesListActivity;
 import com.iismathwizard.cryptonote.R;
-import com.iismathwizard.cryptonote.UserSettings;
+import com.iismathwizard.cryptonote.UserData;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -20,7 +20,7 @@ public class LoginActivity extends CryptoNoteActivity {
     private static final int MINIMUM_PASSWORD_LENGTH = 8;
 
     @Inject
-    public UserSettings settings;
+    public UserData userData;
 
     private Button authButton;
     private EditText passwordField;
@@ -35,7 +35,7 @@ public class LoginActivity extends CryptoNoteActivity {
 
         getComponent().inject(this);
 
-        settings.isUserRegistered().observe(this, isUserRegistered -> {
+        userData.isUserRegistered().observe(this, isUserRegistered -> {
             if(isUserRegistered) {
                 authButton.setText(R.string.account_login);
                 authButton.setOnClickListener(view -> {
@@ -68,23 +68,21 @@ public class LoginActivity extends CryptoNoteActivity {
 
     private void authenticateUser(String password) {
         try {
-            if(Crypto.compareUserHash(password, settings.getUserHash())){
+            if(Crypto.compareUserHash(password, userData.getUserHash())){
                 openNotesList();
+            } else {
+                passwordField.setError(getResources().getString(R.string.password_incorrect_error));
             }
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
+        } catch (GeneralSecurityException e) { }
     }
 
     private void createUser(String password) {
         try {
             String result = Crypto.generateUserHash(password);
-            settings.setUserHash(result);
+            userData.setUserHash(result);
             Crypto.createEncryptionKey();
             openNotesList();
-        } catch (GeneralSecurityException | IOException e) {
-            e.printStackTrace();
-        }
+        } catch (GeneralSecurityException | IOException e) { }
     }
 
     private void openNotesList(){

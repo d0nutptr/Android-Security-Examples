@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import com.iismathwizard.cryptonote.Crypto;
 import com.iismathwizard.cryptonote.CryptoNoteActivity;
 import com.iismathwizard.cryptonote.Notes.Note;
 import com.iismathwizard.cryptonote.Notes.NotesRepository;
@@ -50,8 +51,8 @@ public class NoteEditActivity extends CryptoNoteActivity {
         repository.getNote(id).observe(this, note -> {
             if(note != null){
                 NoteEditActivity.this.note = note;
-                titleField.setText(note.getTitle());
-                contentField.setText(note.getContents());
+                titleField.setText(Crypto.decrypt(note.getTitle()));
+                contentField.setText(Crypto.decrypt(note.getContents()));
             }
         });
 
@@ -70,8 +71,8 @@ public class NoteEditActivity extends CryptoNoteActivity {
         final String contents = contentField.getText().toString();
 
         new Thread(() -> {
-            note.setTitle(title);
-            note.setContents(contents);
+            note.setTitle(Crypto.encrypt(title));
+            note.setContents(Crypto.encrypt(contents));
             repository.saveNote(note);
         }).start();
     }

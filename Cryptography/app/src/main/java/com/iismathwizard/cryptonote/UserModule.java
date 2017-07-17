@@ -11,6 +11,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 
+@Singleton
 @Module
 public class UserModule {
     private SharedPreferences preferences;
@@ -23,8 +24,8 @@ public class UserModule {
 
     @Provides
     @Singleton
-    public UserSettings provideUserSettings() {
-        return new UserSettings(preferences);
+    public UserData provideUserData() {
+        return new UserData(preferences);
     }
 
     @Provides

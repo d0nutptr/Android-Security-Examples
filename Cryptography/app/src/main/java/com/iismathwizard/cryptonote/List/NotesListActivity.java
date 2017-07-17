@@ -1,25 +1,23 @@
 package com.iismathwizard.cryptonote.List;
 
-import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.iismathwizard.cryptonote.Crypto;
 import com.iismathwizard.cryptonote.CryptoNoteActivity;
 import com.iismathwizard.cryptonote.Editing.NoteEditActivity;
 import com.iismathwizard.cryptonote.Notes.Note;
 import com.iismathwizard.cryptonote.Notes.NotesRepository;
 import com.iismathwizard.cryptonote.R;
-import com.iismathwizard.cryptonote.UserSettings;
+import com.iismathwizard.cryptonote.UserData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +26,7 @@ import javax.inject.Inject;
 
 public class NotesListActivity extends CryptoNoteActivity {
     @Inject
-    public UserSettings settings;
+    public UserData userData;
 
     @Inject
     public NotesRepository repository;
@@ -100,8 +98,8 @@ public class NotesListActivity extends CryptoNoteActivity {
 
             Note note = notes.get(i);
 
-            title.setText(note.getTitle());
-            date.setText(note.getDate());
+            title.setText(Crypto.decrypt(note.getTitle()));
+            date.setText(Crypto.decrypt(note.getDate()));
 
             return itemView;
         }

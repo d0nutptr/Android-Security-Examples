@@ -2,6 +2,8 @@ package com.iismathwizard.cryptonote.Notes;
 
 import android.arch.lifecycle.LiveData;
 
+import com.iismathwizard.cryptonote.Crypto;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -36,9 +38,9 @@ public class NotesRepository {
         Note newNote = new Note();
 
         //handle encryption later
-        newNote.setTitle("New Note");
-        newNote.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-        newNote.setContents("");
+        newNote.setTitle(Crypto.encrypt("New Note"));
+        newNote.setDate(Crypto.encrypt(DateFormat.getDateTimeInstance().format(new Date())));
+        newNote.setContents(Crypto.encrypt(""));
 
         saveNote(newNote);
     }

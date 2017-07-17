@@ -68,6 +68,57 @@ This should be enough of an introduction to some core security concepts for the 
 ## WebViews
 
 ## Cryptography
+Cryptography, or the art of writing secrets, allows us to manipulate a message in such a way as to include additional properties such as confidentiality, integrity, or authenticity. Normally, we don't write our own cryptographic algorithms but use predefined, correctly implemented implementations of these cryptographic algorithms. Such examples include AES (Advanced Encryption Standard), SHA (Secure Hashing Algorithm), or RSA.
+
+In the Java ecosystem, cryptography is normally supplied via `Providers`. Each provider has a set of cryptographic algorithms they supply. Providers can be added, such as BouncyCastle, and can allow the developer to include lesser used or stronger cryptographic functions. The Android ecosystem works in the same way. 
+
+### Key Generation
+Before we encrypt or decrypt data, we need to create our encryption keys. The size for our keys depends on which encryption algorithm we plan on using and key sizes that we require for that algorithm. 
+
+* AES 256-bit key
+    ```java
+    KeyGenerator generator = KeyGenerator.getInstance("AES");
+    generator.init(256);
+    SecretKey encryptionKey = generator.generateKey();
+    ```
+* AES 128-bit key derived from a password
+    ```java
+    //user's password
+    String password = "hunter2"; 
+ 
+    //The salt should be securely randomly generated
+    byte[] salt = new byte[32];
+    (new SecureRandom()).nextBytes(salt);
+
+    //4096 iterations of PBKDF2WithHmacSHA1 deriving 128 bits
+    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+    PBEKeySpec keySpec = new PBEKeySpec(password.toCharArray(), salt, 4096, 128);
+    SecretKey encryptionKey = factory.generateSecret(keySpec);
+    ```
+* RSA 2048-bit key pair
+    ```java
+    KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+    generator.initialize(2048);
+    KeyPair keyPair = generator.generateKeyPair();
+    ```
+
+### Key Generation with AndroidKeyStore
+The Android KeyStore is a module that allows you to store cryptographic primitives in a Hardware Security Module (HSM). This allows us to keep our encryption keys in a secure storage that only your app can access. Each key is given an `alias` which allows you to retrieve the key again as if it were a key-value data store. This alias need not be secret as the HSM separates each app/user into its own namespace; an alias for one app will refer to a different key with the same alias on another application. 
+
+* AES 256-bit key intended for AES/GCM/NoPadding stored in Android KeyStore Provider
+    ```java
+    KeyGenerator generator = KeyGenerator.getInstance("AES", "AndroidKeyStore");
+    generator.init(new KeyGenParameterSpec.Builder(alias, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+            .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+            .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+            .setKeySize(256)
+            .build(), new SecureRandom());
+    generator.generateKey();
+    ```
+
+The code for other types of keys or key pairs is similar. There also exist a number of user authentication settings you can specify for your keys that will force Android to prompt the user for device authentication whenever the key is accessed. This can be in the form of fingerprint authentication, pin, pattern or other things. 
+
+### Encryption
 
 ## IPC
 

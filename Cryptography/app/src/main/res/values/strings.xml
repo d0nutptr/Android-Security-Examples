@@ -3,4 +3,5 @@
     <string name="account_create">Create Account</string>
     <string name="account_login">Login</string>
     <string name="password_length_error">Must be 8 or more characters</string>
+    <string name="password_incorrect_error">Incorrect password</string>
 </resources>

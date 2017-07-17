@@ -22,26 +22,26 @@ public class Note {
     }
 
     public String getTitle() {
-        return Crypto.decrypt(title);
+        return title;
     }
 
     public void setTitle(String title) {
-        this.title = Crypto.encrypt(title);
+        this.title = title;
     }
 
     public String getDate() {
-        return Crypto.decrypt(date);
+        return date;
     }
 
     public void setDate(String date) {
-        this.date = Crypto.encrypt(date);
+        this.date = date;
     }
 
     public String getContents() {
-        return Crypto.decrypt(contents);
+        return contents;
     }
 
     public void setContents(String contents) {
-        this.contents = Crypto.encrypt(contents);
+        this.contents = contents;
     }
 }
