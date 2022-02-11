@@ -43,7 +43,7 @@ After enumerating threats, come up with mitigations that you can employ in your 
 
 Defense in Depth is the idea that a solid defense requires many layers. The common analogy is a castle.
 
-![Castle](http://blog.trendmicro.com/trendlabs-security-intelligence/files/2013/02/understanding_apt2.png "Defense in Depth castle as viewed from sky")
+![Castle](castle.png "Defense in Depth castle as viewed from sky")
 
 While a castle provides strong defense on the outside, it is not impervious. If this castle only has a single layer then a lack of maintenance on the outside wall might be enough for an invading clan to get inside (a breach!). 
 
